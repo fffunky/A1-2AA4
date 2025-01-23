@@ -41,6 +41,20 @@ public class Matrix {
         }
     }
 
+    public List<Integer> getRow(int idx) {
+        return this.matrix.get(idx);
+    }
+
+    public List<Integer> getCol(int idx) {
+        List<Integer> col = new ArrayList<>();
+
+        for (int i = 0; i < this.matrix.size(); i++) {
+            col.add(this.matrix.get(i).get(idx));
+        }
+
+        return col;
+    }
+
     @Override
     public String toString() {
         return "Matrix{" + matrix +

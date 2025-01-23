@@ -9,7 +9,6 @@ public class Maze {
 
     public Maze(String fileInput) {
         initMaze(fileInput);
-
     }
 
     private void initMaze(String fileInput) {
@@ -34,8 +33,33 @@ public class Maze {
         }
     }
 
+    public Matrix getMatrix() {
+        return this.maze;
+    }
+
+    public Integer getWidth() {
+        return this.width;
+    }
+
+    public Integer getHeight() {
+        return this.height;
+    }
+
     @Override
     public String toString() {
-        return maze.toString();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < this.getHeight(); i++) {
+            for (int j = 0; j < this.getWidth(); j++) {
+                if (maze.Get(i, j) == 0) {
+                    sb.append(" ");
+                } else {
+                    sb.append("#");
+                }
+                sb.append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }

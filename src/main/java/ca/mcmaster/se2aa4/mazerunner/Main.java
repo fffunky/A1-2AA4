@@ -34,15 +34,11 @@ public class Main {
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
 
-        Path path = new Path();
-        path.addInstruction(new Instruction("9F"));
-        path.addInstruction(new Instruction("3R"));
-        path.addInstruction(new Instruction("5F"));
-        path.addInstruction(new Instruction("2L"));
-        path.addInstruction(new Instruction("4F"));
+        Maze m = new Maze(readFile(args[0]));
 
-        logger.info(path.Factorized());
-        logger.info(path.Canonical());
+        Matrix matrix = m.getMatrix();
+
+        System.out.println(m.toString());
 
         logger.info("**** Computing path");
         logger.info("PATH NOT COMPUTED");
