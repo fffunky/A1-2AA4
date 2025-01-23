@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,6 +12,9 @@ public class Main {
 
     private static final Logger logger = LogManager.getLogger();
     private static final Options options = new Options();
+    private static final CommandLineParser parser = new DefaultParser();
+    private static String filePath = null;
+    private static String pathString = null;
 
     public static String readFile(String fileName) {
         try {
@@ -31,8 +32,24 @@ public class Main {
             return out.toString();
 
         } catch(Exception e) {
-            logger.error("/!\\ An error has occured /!\\");
-            return null;
+            logger.error("Bad filepath: {}", fileName);
+            System.exit(1);
+        }
+    }
+
+    // set options for CLI parser
+    public static void initCLI(String[] args) {
+        options.addOption("i", true, "name of input file containing maze");
+        options.addOption("p", true, "takes a path as input to verify its a legit one.");
+
+        try {
+            CommandLine cmd = parser.parse(options, args);
+            filePath = cmd.getOptionValue("i");
+            pathString = cmd.getOptionValue("p");
+        } catch (ParseException e) {
+            // This means a flag was added but no argument passed
+            logger.error(e.getMessage());
+            System.exit(2);
         }
     }
 
@@ -40,12 +57,10 @@ public class Main {
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
 
+        initCLI(args);
+        String fileInput = readFile(filePath);
 
-        Maze m = new Maze(readFile(args[0]));
 
-        Matrix matrix = m.getMatrix();
-
-        System.out.println(m.toString());
 
         logger.info("**** Computing path");
         logger.info("PATH NOT COMPUTED");
