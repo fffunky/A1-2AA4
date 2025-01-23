@@ -1,5 +1,6 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Maze {
@@ -33,6 +34,29 @@ public class Maze {
         }
     }
 
+    public Position getStart() {
+        List<Integer> col = this.getMatrix().getCol(0);
+
+        for (int row = 0; row < col.size(); row++) {
+            if (col.get(row) == 0) {
+                return new Position(0, row);
+            }
+        }
+        // shouldn't happen. means bad input.
+        return null;
+    }
+
+    public Position getEnd() {
+        List<Integer> col = this.getMatrix().getCol(this.getWidth() - 1);
+        for (int row = 0; row < col.size(); row++) {
+            if (col.get(row) == 0) {
+                return new Position(this.getWidth() - 1, row);
+            }
+        }
+        // shouldn't happen. means bad input.
+        return null;
+    }
+
     public Matrix getMatrix() {
         return this.maze;
     }
@@ -52,11 +76,10 @@ public class Maze {
         for (int i = 0; i < this.getHeight(); i++) {
             for (int j = 0; j < this.getWidth(); j++) {
                 if (maze.Get(i, j) == 0) {
-                    sb.append(" ");
+                    sb.append("  ");
                 } else {
-                    sb.append("#");
+                    sb.append("##");
                 }
-                sb.append(" ");
             }
             sb.append("\n");
         }
