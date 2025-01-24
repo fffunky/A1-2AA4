@@ -3,6 +3,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Arrays;
 
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
@@ -41,13 +42,32 @@ public class Main {
 
     // set options for CLI parser
     public static void initCLI(String[] args) {
-        options.addOption("i", true, "name of input file containing maze");
-        options.addOption("p", true, "takes a path as input to verify its a legit one.");
+        options.addOption(Option.builder("i")
+                .hasArg()
+                .desc("name of input file containing maze")
+                .build());
+        options.addOption(Option.builder("p")
+                .hasArgs()
+                .desc("takes a path as input to verify its a legit one.")
+                .build());
 
         try {
             CommandLine cmd = parser.parse(options, args);
+
+            if (!cmd.hasOption("i")) {
+                logger.error("Pass in a file using the -i option. Exiting program...");
+                System.exit(1);
+            }
+
             filePath = cmd.getOptionValue("i");
-            pathString = cmd.getOptionValue("p");
+
+            // get remaining arguments following -p
+             String[] pathValues = cmd.getOptionValues("p");
+             if (pathValues == null) {
+                 pathString = null;
+             } else {
+                 pathString = String.join(" ", pathValues);
+             }
         } catch (ParseException e) {
             // This means a flag was added but no argument passed
             logger.error(e.getMessage());
