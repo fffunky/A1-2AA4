@@ -68,13 +68,30 @@ public class MazeRunner {
         return this.path;
     }
 
+    public void followPath(Path p) {
+
+        for (Instruction instruction : p.getInstructions()) {
+            for (int i = 0; i < instruction.getFrequency(); i++) {
+                switch (instruction.getDirection()) {
+                    case "F":
+                        moveForward();
+                        break;
+                    case "L":
+                        turnLeft();
+                        break;
+                    case "R":
+                        turnRight();
+                        break;
+                }
+                path.addInstruction(instruction);
+            }
+        }
+    }
+
     public Path runPathfinder() {
         boolean found = false;
         while (!found) {
 
-            System.out.printf("%d %d\n", this.position.X(), this.position.Y());
-            System.out.printf("%d %d\n", this.target.X(), this.target.Y());
-            System.out.println(this);
             Integer ahead = this.peekAhead();
             Integer right = this.peekRight();
             Integer left = this.peekLeft();

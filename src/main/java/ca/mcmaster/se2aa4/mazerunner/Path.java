@@ -12,6 +12,10 @@ public class Path {
         this.instructions = new ArrayList<>();
     }
 
+    public ArrayList<Instruction> getInstructions() {
+        return instructions;
+    }
+
     public void addInstruction(String instruction) {
         instructions.add(new Instruction(instruction));
     }

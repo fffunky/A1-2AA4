@@ -32,7 +32,7 @@ public class Main {
             return out.toString();
 
         } catch(Exception e) {
-            logger.error("Bad filepath: {}", fileName);
+            logger.error("Bad filepath: {}. Exiting program...", fileName);
             System.exit(1);
         }
 
@@ -59,16 +59,46 @@ public class Main {
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
 
+
         initCLI(args);
         String fileInput = readFile(filePath);
         Maze maze = new Maze(fileInput);
+        System.out.println(maze);
 
-        MazeRunner mr = new MazeRunner(maze);
-        mr.runPathfinder();
-        System.out.println(mr.getPath().Factorized());
+        if (pathString == null) {
+            // no -p flag
+            logger.info("**** Computing path\n");
+            MazeRunner mr = new MazeRunner(maze);
+            Path path = mr.runPathfinder();
+            System.out.printf("Canonical: %s\n", path.Canonical());
+            System.out.printf("Factorized: %s\n\n", path.Factorized());
+        } else {
+            // check path given a -p flag
+            Path path = new Path();
+            path.addInstruction("1F");
+            path.addInstruction("1L");
+            path.addInstruction("1F");
+            path.addInstruction("1R");
+            path.addInstruction("2F");
+            path.addInstruction("1L");
+            path.addInstruction("6F");
+            path.addInstruction("1R");
+            path.addInstruction("4F");
+            path.addInstruction("1R");
+            path.addInstruction("2F");
+            path.addInstruction("1L");
+            path.addInstruction("2F");
+            path.addInstruction("1R");
+            path.addInstruction("2F");
+            path.addInstruction("1L");
+            path.addInstruction("1F");
 
-        logger.info("**** Computing path");
-        logger.info("PATH NOT COMPUTED");
+            MazeRunner mr = new MazeRunner(maze);
+            System.out.println(mr);
+            mr.followPath(path);
+            System.out.println(mr);
+        }
+
         logger.info("** End of MazeRunner");
     }
 }
