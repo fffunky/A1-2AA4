@@ -26,4 +26,8 @@ public class Position {
         coords.add(this.y);
         return coords;
     }
+
+    public String toString() {
+        return "(" + this.x + "," + this.y + ")";
+    }
 }

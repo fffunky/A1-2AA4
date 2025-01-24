@@ -19,19 +19,40 @@ public class Maze {
         this.maze = new Matrix(width, height);
 
         for (String line : fileInput.split("\n")) {
-            for (String ch : line.split("")) {
-                if (Objects.equals(ch, " ")) {
+
+            String[] s = line.split("");
+
+            for (int i = 0; i < this.width; i++) {
+
+                try {
+                    if (Objects.equals(s[i], " ")) {
+                        maze.Set(row, col, 0);
+                    } else if (Objects.equals(s[i], "#")) {
+                        maze.Set(row, col, 1);
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
                     maze.Set(row, col, 0);
-                } else if (Objects.equals(ch, "#")) {
-                    maze.Set(row, col, 1);
                 }
+
                 col++;
             }
+
+
             if (col == this.width) {
                 col = 0;
                 row++;
             }
         }
+
+    }
+
+    // returns the value of the maze at (row, col), or -1 if out of bounds.
+    public Integer getCellAt(int row, int col) {
+        if (this.maze.Get(row, col) == null) {
+            return -1;
+        }
+
+        return this.maze.Get(row, col);
     }
 
     public Position getStart() {
@@ -48,6 +69,7 @@ public class Maze {
 
     public Position getEnd() {
         List<Integer> col = this.getMatrix().getCol(this.getWidth() - 1);
+
         for (int row = 0; row < col.size(); row++) {
             if (col.get(row) == 0) {
                 return new Position(this.getWidth() - 1, row);

@@ -1,6 +1,12 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Objects;
+
 public class MazeRunner {
+    private static final Logger logger = LogManager.getLogger();
 
     public enum Heading {
         NORTH, EAST, SOUTH, WEST;
@@ -32,11 +38,14 @@ public class MazeRunner {
 
     private Maze maze;
     private Position position;
-    private Path path;
+    private Position target;
+    private Path path = new Path();
     private Heading heading = Heading.EAST;
 
     public MazeRunner(Maze maze) {
         this.maze = maze;
+        this.position = maze.getStart();
+        this.target = maze.getEnd();
     }
 
     public Integer getX() {
@@ -60,10 +69,209 @@ public class MazeRunner {
     }
 
     public Path runPathfinder() {
+        boolean found = false;
+        while (!found) {
+
+            System.out.printf("%d %d\n", this.position.X(), this.position.Y());
+            System.out.printf("%d %d\n", this.target.X(), this.target.Y());
+            System.out.println(this);
+            Integer ahead = this.peekAhead();
+            Integer right = this.peekRight();
+            Integer left = this.peekLeft();
+
+
+            if ( (right == 0 && ahead == 0 && left == 0) ||
+                    (right == 0 && ahead == 0 && left == 1) ||
+                    (right == 0 && ahead == 1 && left == 0) ||
+                    (right == 0 && ahead == 1 && left == 1) ) {
+                turnRight();
+                moveForward();
+                path.addInstruction("1R");
+                path.addInstruction("1F");
+            } else if ( (right == 1 && ahead == 0 && left == 0) ||
+                    (right == 1 && ahead == 0 && left == 1)) {
+                moveForward();
+                path.addInstruction("1F");
+            } else if (left == 0 && ahead == 1 && right == 1) {
+                turnLeft();
+                moveForward();
+                path.addInstruction("1L");
+                path.addInstruction("1F");
+            } else {
+                turnRight();
+                turnRight();
+                moveForward();
+                path.addInstruction("2R");
+                path.addInstruction("1F");
+            }
+
+            if (position.X() == target.X() && position.Y() == target.Y()) {
+                found = true;
+            }
+
+        }
+
+        return this.path;
+    }
+
+    // returns a 1 or 0 if there is a wall or space ahead, respectively,
+    // or -1 if the space ahead is out of bounds.
+    private Integer peekAhead() {
+        if (this.heading == Heading.NORTH) {
+            return this.peekNorth();
+        } else if (this.heading == Heading.EAST) {
+            return this.peekEast();
+        } else if (this.heading == Heading.SOUTH) {
+            return this.peekSouth();
+        } else if (this.heading == Heading.WEST) {
+            return this.peekWest();
+        }
+        return -1;
+    }
+
+    private Integer peekRight() {
+        if (this.heading == Heading.NORTH) {
+            return this.peekEast();
+        } else if (this.heading == Heading.EAST) {
+            return this.peekSouth();
+        } else if (this.heading == Heading.SOUTH) {
+            return this.peekWest();
+        } else if (this.heading == Heading.WEST) {
+            return this.peekNorth();
+        }
+        return -1;
+    }
+
+    private Integer peekLeft() {
+        if (this.heading == Heading.NORTH) {
+            return this.peekWest();
+        } else if (this.heading == Heading.EAST) {
+            return this.peekNorth();
+        } else if (this.heading == Heading.SOUTH) {
+            return this.peekEast();
+        } else if (this.heading == Heading.WEST) {
+            return this.peekSouth();
+        }
+        return -1;
+    }
+
+    // returns the coordinate of the position ahead, or null if that position is out of bounds
+    private Position getPositionAhead() {
+        if (this.heading == Heading.NORTH) {
+            return this.getNorthPosition();
+        } else if (this.heading == Heading.EAST) {
+            return this.getEastPosition();
+        } else if (this.heading == Heading.SOUTH) {
+            return this.getSouthPosition();
+        } else if (this.heading == Heading.WEST) {
+            return this.getWestPosition();
+        }
         return null;
     }
 
-    private Integer peekAhead() {
-        return null;
+    private Integer peekNorth() {
+        try {
+            return this.maze.getCellAt(this.position.Y()-1, this.position.X());
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    private Integer peekEast() {
+        try {
+            return this.maze.getCellAt(this.position.Y(), this.position.X()+1);
+        } catch (Exception e){
+            return -1;
+        }
+
+    }
+
+    private Integer peekSouth() {
+        try {
+            return this.maze.getCellAt(this.position.Y()+1, this.position.X());
+        } catch (Exception e){
+            return -1;
+        }
+    }
+    private Integer peekWest() {
+        try {
+            return this.maze.getCellAt(this.position.Y(), this.position.X()-1);
+        } catch (Exception ignored){
+            return -1;
+        }
+
+    }
+
+    private Position getNorthPosition() {
+        if (this.peekNorth() == -1) {
+            return null;
+        } else {
+            return new Position(this.position.X(), this.position.Y() - 1);
+        }
+    }
+
+    private Position getEastPosition() {
+        if (this.peekEast() == -1) {
+            return null;
+        } else {
+            return new Position(this.position.X() + 1, this.position.Y());
+        }
+    }
+
+    private Position getSouthPosition() {
+        if (this.peekSouth() == -1) {
+            return null;
+        } else {
+            return new Position(this.position.X(), this.position.Y() + 1);
+        }
+    }
+
+    private Position getWestPosition() {
+        if (this.peekWest() == -1) {
+            return null;
+        } else {
+            return new Position(this.position.X() - 1, this.position.Y());
+        }
+    }
+
+    private void moveForward() {
+        Integer cellAhead = this.peekAhead();
+
+        if (cellAhead == 0) {
+            // if the space is empty then we move forward
+            this.position = getPositionAhead();
+        }
+        // otherwise the position doesn't change
+    }
+
+    private void turnRight() {
+        this.heading = this.heading.toRight();
+    }
+
+    private void turnLeft() {
+        this.heading = this.heading.toLeft();
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < maze.getHeight(); i++) {
+            for (int j = 0; j < maze.getWidth(); j++) {
+                if (maze.getCellAt(i, j) == 0) {
+                    if (position.X() == j && position.Y() == i) {
+                        sb.append("<>");
+                    } else {
+                        sb.append("  ");
+                    }
+                } else {
+                    sb.append("##");
+                }
+            }
+            sb.append("\n");
+        }
+        sb.append("Heading: " + this.heading.toString() + "\n");
+        sb.append("Position: " + this.position.toString() + "\n");
+
+        return sb.toString();
     }
 }

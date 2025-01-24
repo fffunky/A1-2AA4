@@ -25,7 +25,7 @@ public class Matrix {
         try {
             this.matrix.get(row).set(col, value);
         } catch (IndexOutOfBoundsException e) {
-            logger.error(" - Out of Bounds: {}", e.getMessage());
+            logger.error("- Matrix.Set() Out of Bounds: {}", e.getMessage());
         }
     }
 
@@ -36,7 +36,6 @@ public class Matrix {
             value = this.matrix.get(row).get(col);
             return value;
         } catch (IndexOutOfBoundsException e) {
-            logger.error(" - Out of Bounds: {}", e.getMessage());
             return null;
         }
     }

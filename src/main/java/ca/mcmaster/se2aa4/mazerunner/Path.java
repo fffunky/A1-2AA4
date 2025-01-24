@@ -1,6 +1,8 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Path {
 
@@ -10,6 +12,10 @@ public class Path {
         this.instructions = new ArrayList<>();
     }
 
+    public void addInstruction(String instruction) {
+        instructions.add(new Instruction(instruction));
+    }
+
     public void addInstruction(Instruction instruction) {
         this.instructions.add(instruction);
     }
@@ -17,24 +23,39 @@ public class Path {
     // returns a string of the path in the factorized form
     public String Factorized() {
         StringBuilder factorized = new StringBuilder();
-        for (Instruction instruction : this.instructions) {
-            if (instruction.getFrequency() != 1) {
-                factorized.append(instruction.getFrequency().toString());
-            }
-            factorized.append(instruction.getDirection());
+
+        String canonical = this.Canonical();
+        String[] instructions = canonical.split(" ");
+
+        for (String instruction : instructions) {
+            factorized.append(instruction.length());
+            factorized.append(instruction.charAt(0));
             factorized.append(" ");
         }
+        
         return factorized.toString();
     }
 
     public String Canonical() {
         StringBuilder canonical = new StringBuilder();
-        for (Instruction instruction : this.instructions) {
-            for (int i = 0; i < instruction.getFrequency(); i++) {
-                canonical.append(instruction.getDirection());
+        Instruction cur = null;
+        Instruction next = null;
+
+        for (int i = 0; i < this.instructions.size() - 1; i++) {
+            cur = this.instructions.get(i);
+            next = this.instructions.get(i + 1);
+
+            for (int j = 0; j < cur.getFrequency(); j++) {
+                canonical.append(cur.getDirection());
             }
-            canonical.append(" ");
+
+            if (!Objects.equals(next.getDirection(), cur.getDirection())) {
+                canonical.append(" ");
+            }
         }
+
+        canonical.append(next.getDirection());
+
         return canonical.toString();
     }
 

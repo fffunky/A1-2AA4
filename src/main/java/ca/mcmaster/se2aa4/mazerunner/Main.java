@@ -35,6 +35,8 @@ public class Main {
             logger.error("Bad filepath: {}", fileName);
             System.exit(1);
         }
+
+        return null;
     }
 
     // set options for CLI parser
@@ -59,8 +61,11 @@ public class Main {
 
         initCLI(args);
         String fileInput = readFile(filePath);
+        Maze maze = new Maze(fileInput);
 
-
+        MazeRunner mr = new MazeRunner(maze);
+        mr.runPathfinder();
+        System.out.println(mr.getPath().Factorized());
 
         logger.info("**** Computing path");
         logger.info("PATH NOT COMPUTED");
