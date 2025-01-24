@@ -63,44 +63,35 @@ public class Main {
         initCLI(args);
         String fileInput = readFile(filePath);
         Maze maze = new Maze(fileInput);
-        System.out.println(maze);
+        MazeRunner mr = new MazeRunner(maze);
 
         if (pathString == null) {
             // no -p flag
             logger.info("**** Computing path\n");
-            MazeRunner mr = new MazeRunner(maze);
             Path path = mr.runPathfinder();
             System.out.printf("Canonical: %s\n", path.Canonical());
             System.out.printf("Factorized: %s\n\n", path.Factorized());
         } else {
             // check path given a -p flag
-            Path path = new Path();
-            path.addInstruction("1F");
-            path.addInstruction("1L");
-            path.addInstruction("1F");
-            path.addInstruction("1R");
-            path.addInstruction("2F");
-            path.addInstruction("1L");
-            path.addInstruction("6F");
-            path.addInstruction("1R");
-            path.addInstruction("4F");
-            path.addInstruction("1R");
-            path.addInstruction("2F");
-            path.addInstruction("1L");
-            path.addInstruction("2F");
-            path.addInstruction("1R");
-            path.addInstruction("2F");
-            path.addInstruction("1L");
-            path.addInstruction("1F");
+            Path p = null;
+            try {
+                p = Path.pathFromString(pathString);
+            } catch (Exception e) {
+                logger.error("Bad input path: {}. Exiting program...", fileInput);
+                System.exit(1);
+            }
 
-            String factorized = "F L F R 2F L 6F R 4F R 2F L 2F R 2F R";
-            String canonical = "F L F R FF L FFFFFF R FFFF R FF L FF R FF R FF L F";
+            logger.info("**** Following path: {}\n", pathString);
+            mr.followPath(p);
 
-            String simple = "FFFF";
+            Position endPos = mr.getPosition();
+            Position target = mr.getTarget();
 
-            Path f = Path.pathFromString(canonical);
-
-            System.out.println(f);
+            if ( (endPos.X() == target.X()) && (endPos.Y() == target.Y()) ) {
+                System.out.printf("Path '%s' is a valid solution to the maze\n\n", pathString);
+            } else {
+                System.out.printf("Path '%s' is not a valid solution to the maze\n\n", pathString);
+            }
 
         }
 

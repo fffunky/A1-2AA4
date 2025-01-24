@@ -60,6 +60,10 @@ public class MazeRunner {
         return this.position;
     }
 
+    public Position getTarget() {
+        return this.target;
+    }
+
     public Heading getHeading() {
         return this.heading;
     }

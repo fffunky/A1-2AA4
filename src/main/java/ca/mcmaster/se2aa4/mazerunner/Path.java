@@ -38,31 +38,22 @@ public class Path {
             } catch (Exception e) {
                 right = 'x';
             }
-            // cases
-            // i = digit, j = char -> take new instruction from substring s[i:j+1]; i++; j=i+1;
-            // i = char, j = char -> new instruction = "1" + s[i]; i++; j=i+1;
-            // i = char, j = digit -> new instruction = "1" + s[i]; i++; j=i+1;
-            // i = digit, j = digit -> j++;
-            System.out.println(left + " " + right);
 
             if (Character.isAlphabetic(left) && Character.isAlphabetic(right)) {
                 if (right == 'x') {
                     p.addInstruction("1" + left);
                     i = j + 1; // end loop
                 } else {
-                    logger.info("New Instruction: {}", "1" + s.substring(i, j));
                     p.addInstruction("1" + s.substring(i, j));
                     i++;
                     j++;
                 }
             } else if (Character.isAlphabetic(left) && Character.isDigit(right)) {
-                logger.info("New instruction: {}", "1" + s.substring(i, j));
                 p.addInstruction("1" + s.substring(i, j));
                 i++;
                 j++;
 
             } else if (Character.isDigit(left) && Character.isAlphabetic(right)) {
-                logger.info("New Instruction: {}", s.substring(i, j+1));
                 p.addInstruction(s.substring(i, j+1));
                 i = j + 1;
                 j = i + 1;
