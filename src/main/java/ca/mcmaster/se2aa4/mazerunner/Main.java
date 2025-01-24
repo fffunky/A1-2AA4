@@ -93,10 +93,15 @@ public class Main {
             path.addInstruction("1L");
             path.addInstruction("1F");
 
-            MazeRunner mr = new MazeRunner(maze);
-            System.out.println(mr);
-            mr.followPath(path);
-            System.out.println(mr);
+            String factorized = "F L F R 2F L 6F R 4F R 2F L 2F R 2F R";
+            String canonical = "F L F R FF L FFFFFF R FFFF R FF L FF R FF R FF L F";
+
+            String simple = "FFFF";
+
+            Path f = Path.pathFromString(canonical);
+
+            System.out.println(f);
+
         }
 
         logger.info("** End of MazeRunner");
