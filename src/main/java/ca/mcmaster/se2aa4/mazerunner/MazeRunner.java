@@ -96,24 +96,27 @@ public class MazeRunner {
         boolean found = false;
         while (!found) {
 
-            Integer ahead = this.peekAhead();
-            Integer right = this.peekRight();
-            Integer left = this.peekLeft();
+            Cell ahead = this.peekAhead();
+            Cell right = this.peekRight();
+            Cell left = this.peekLeft();
 
 
-            if ( (right == 0 && ahead == 0 && left == 0) ||
-                    (right == 0 && ahead == 0 && left == 1) ||
-                    (right == 0 && ahead == 1 && left == 0) ||
-                    (right == 0 && ahead == 1 && left == 1) ) {
+            assert right != null;
+            assert left != null;
+            assert ahead != null;
+            if ( (right.isEmpty() && ahead.isEmpty() && left.isEmpty()) ||
+                    (right.isEmpty() && ahead.isEmpty() && !left.isEmpty() ) ||
+                    (right.isEmpty() && !ahead.isEmpty() && left.isEmpty()) ||
+                    (right.isEmpty() && !ahead.isEmpty() && !left.isEmpty()) ) {
                 turnRight();
                 moveForward();
                 path.addInstruction("1R");
                 path.addInstruction("1F");
-            } else if ( (right == 1 && ahead == 0 && left == 0) ||
-                    (right == 1 && ahead == 0 && left == 1)) {
+            } else if ( (!right.isEmpty() && ahead.isEmpty() && left.isEmpty()) ||
+                    (!right.isEmpty() && ahead.isEmpty() && !left.isEmpty())) {
                 moveForward();
                 path.addInstruction("1F");
-            } else if (left == 0 && ahead == 1 && right == 1) {
+            } else if (left.isEmpty() && !ahead.isEmpty() && !right.isEmpty()) {
                 turnLeft();
                 moveForward();
                 path.addInstruction("1L");
@@ -137,7 +140,7 @@ public class MazeRunner {
 
     // returns a 1 or 0 if there is a wall or space ahead, respectively,
     // or -1 if the space ahead is out of bounds.
-    private Integer peekAhead() {
+    private Cell peekAhead() {
         if (this.heading == Heading.NORTH) {
             return this.peekNorth();
         } else if (this.heading == Heading.EAST) {
@@ -147,10 +150,10 @@ public class MazeRunner {
         } else if (this.heading == Heading.WEST) {
             return this.peekWest();
         }
-        return -1;
+        return null;
     }
 
-    private Integer peekRight() {
+    private Cell peekRight() {
         if (this.heading == Heading.NORTH) {
             return this.peekEast();
         } else if (this.heading == Heading.EAST) {
@@ -160,10 +163,10 @@ public class MazeRunner {
         } else if (this.heading == Heading.WEST) {
             return this.peekNorth();
         }
-        return -1;
+        return null;
     }
 
-    private Integer peekLeft() {
+    private Cell peekLeft() {
         if (this.heading == Heading.NORTH) {
             return this.peekWest();
         } else if (this.heading == Heading.EAST) {
@@ -173,7 +176,7 @@ public class MazeRunner {
         } else if (this.heading == Heading.WEST) {
             return this.peekSouth();
         }
-        return -1;
+        return null;
     }
 
     // returns the coordinate of the position ahead, or null if that position is out of bounds
@@ -190,41 +193,41 @@ public class MazeRunner {
         return null;
     }
 
-    private Integer peekNorth() {
+    private Cell peekNorth() {
         try {
             return this.maze.getCellAt(this.position.Y()-1, this.position.X());
         } catch (Exception e) {
-            return -1;
+            return new NullCell();
         }
     }
 
-    private Integer peekEast() {
+    private Cell peekEast() {
         try {
             return this.maze.getCellAt(this.position.Y(), this.position.X()+1);
         } catch (Exception e){
-            return -1;
+            return new NullCell();
         }
 
     }
 
-    private Integer peekSouth() {
+    private Cell peekSouth() {
         try {
             return this.maze.getCellAt(this.position.Y()+1, this.position.X());
         } catch (Exception e){
-            return -1;
+            return new NullCell();
         }
     }
-    private Integer peekWest() {
+    private Cell peekWest() {
         try {
             return this.maze.getCellAt(this.position.Y(), this.position.X()-1);
         } catch (Exception ignored){
-            return -1;
+            return new NullCell();
         }
 
     }
 
     private Position getNorthPosition() {
-        if (this.peekNorth() == -1) {
+        if (this.peekNorth() == null) {
             return null;
         } else {
             return new Position(this.position.X(), this.position.Y() - 1);
@@ -232,7 +235,7 @@ public class MazeRunner {
     }
 
     private Position getEastPosition() {
-        if (this.peekEast() == -1) {
+        if (this.peekEast() == null) {
             return null;
         } else {
             return new Position(this.position.X() + 1, this.position.Y());
@@ -240,7 +243,7 @@ public class MazeRunner {
     }
 
     private Position getSouthPosition() {
-        if (this.peekSouth() == -1) {
+        if (this.peekSouth() == null) {
             return null;
         } else {
             return new Position(this.position.X(), this.position.Y() + 1);
@@ -248,7 +251,7 @@ public class MazeRunner {
     }
 
     private Position getWestPosition() {
-        if (this.peekWest() == -1) {
+        if (this.peekWest() == null) {
             return null;
         } else {
             return new Position(this.position.X() - 1, this.position.Y());
@@ -256,9 +259,10 @@ public class MazeRunner {
     }
 
     private void moveForward() {
-        Integer cellAhead = this.peekAhead();
+        Cell cellAhead = this.peekAhead();
 
-        if (cellAhead == 0) {
+        assert cellAhead != null;
+        if (cellAhead.isEmpty()) {
             // if the space is empty then we move forward
             this.position = getPositionAhead();
         }
@@ -278,7 +282,7 @@ public class MazeRunner {
 
         for (int i = 0; i < maze.getHeight(); i++) {
             for (int j = 0; j < maze.getWidth(); j++) {
-                if (maze.getCellAt(i, j) == 0) {
+                if (maze.getCellAt(i, j).isEmpty()) {
                     if (position.X() == j && position.Y() == i) {
                         sb.append("<>");
                     } else {

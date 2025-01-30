@@ -1,10 +1,11 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class Maze {
-    private Matrix<Integer> maze;
+    private Matrix<Cell> maze;
     private Integer width;
     private Integer height;
 
@@ -16,50 +17,49 @@ public class Maze {
         int row = 0, col = 0;
         height = fileInput.split("\n").length;
         width = fileInput.split("\n")[0].length();
-        maze = new Matrix<Integer>(width, height);
+
+        maze = new Matrix<Cell>(height, width);
 
         for (String line : fileInput.split("\n")) {
-
             String[] s = line.split("");
 
             for (int i = 0; i < width; i++) {
-
                 try {
                     if (Objects.equals(s[i], " ")) {
-                        maze.Set(row, col, 0);
+                        maze.Set(row, col, new EmptyCell());
                     } else if (Objects.equals(s[i], "#")) {
-                        maze.Set(row, col, 1);
+                        maze.Set(row, col, new WallCell());
+                    } else {
+                        maze.Set(row, col, new EmptyCell());
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    maze.Set(row, col, 0);
+                    maze.Set(row, col, new EmptyCell());
                 }
 
                 col++;
             }
-
 
             if (col == width) {
                 col = 0;
                 row++;
             }
         }
-
     }
 
     // returns the value of the maze at (row, col), or -1 if out of bounds.
-    public Integer getCellAt(int row, int col) {
+    public Cell getCellAt(int row, int col) {
         if (maze.Get(row, col) == null) {
-            return -1;
+            return new NullCell();
         }
 
         return maze.Get(row, col);
     }
 
     public Position getStart() {
-        List<Integer> col = getMatrix().getCol(0);
+        List<Cell> col = getMatrix().getCol(0);
 
         for (int row = 0; row < col.size(); row++) {
-            if (col.get(row) == 0) {
+            if (col.get(row).isEmpty()) {
                 return new Position(0, row);
             }
         }
@@ -68,10 +68,10 @@ public class Maze {
     }
 
     public Position getEnd() {
-        List<Integer> col = getMatrix().getCol(this.getWidth() - 1);
+        List<Cell> col = getMatrix().getCol(this.getWidth() - 1);
 
         for (int row = 0; row < col.size(); row++) {
-            if (col.get(row) == 0) {
+            if (col.get(row).isEmpty()) {
                 return new Position(this.getWidth() - 1, row);
             }
         }
@@ -79,7 +79,7 @@ public class Maze {
         return null;
     }
 
-    public Matrix<Integer> getMatrix() {
+    public Matrix<Cell> getMatrix() {
         return maze;
     }
 
@@ -97,11 +97,7 @@ public class Maze {
 
         for (int i = 0; i < this.getHeight(); i++) {
             for (int j = 0; j < this.getWidth(); j++) {
-                if (maze.Get(i, j) == 0) {
-                    sb.append("  ");
-                } else {
-                    sb.append("##");
-                }
+                sb.append(maze.Get(i,j).toString());
             }
             sb.append("\n");
         }
