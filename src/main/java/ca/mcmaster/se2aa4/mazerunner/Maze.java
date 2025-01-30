@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Maze {
-    private Matrix maze;
+    private Matrix<Integer> maze;
     private Integer width;
     private Integer height;
 
@@ -14,15 +14,15 @@ public class Maze {
 
     private void initMaze(String fileInput) {
         int row = 0, col = 0;
-        this.height = fileInput.split("\n").length;
-        this.width = fileInput.split("\n")[0].length();
-        this.maze = new Matrix(width, height);
+        height = fileInput.split("\n").length;
+        width = fileInput.split("\n")[0].length();
+        maze = new Matrix<Integer>(width, height);
 
         for (String line : fileInput.split("\n")) {
 
             String[] s = line.split("");
 
-            for (int i = 0; i < this.width; i++) {
+            for (int i = 0; i < width; i++) {
 
                 try {
                     if (Objects.equals(s[i], " ")) {
@@ -38,7 +38,7 @@ public class Maze {
             }
 
 
-            if (col == this.width) {
+            if (col == width) {
                 col = 0;
                 row++;
             }
@@ -48,15 +48,15 @@ public class Maze {
 
     // returns the value of the maze at (row, col), or -1 if out of bounds.
     public Integer getCellAt(int row, int col) {
-        if (this.maze.Get(row, col) == null) {
+        if (maze.Get(row, col) == null) {
             return -1;
         }
 
-        return this.maze.Get(row, col);
+        return maze.Get(row, col);
     }
 
     public Position getStart() {
-        List<Integer> col = this.getMatrix().getCol(0);
+        List<Integer> col = getMatrix().getCol(0);
 
         for (int row = 0; row < col.size(); row++) {
             if (col.get(row) == 0) {
@@ -68,7 +68,7 @@ public class Maze {
     }
 
     public Position getEnd() {
-        List<Integer> col = this.getMatrix().getCol(this.getWidth() - 1);
+        List<Integer> col = getMatrix().getCol(this.getWidth() - 1);
 
         for (int row = 0; row < col.size(); row++) {
             if (col.get(row) == 0) {
@@ -79,16 +79,16 @@ public class Maze {
         return null;
     }
 
-    public Matrix getMatrix() {
-        return this.maze;
+    public Matrix<Integer> getMatrix() {
+        return maze;
     }
 
     public Integer getWidth() {
-        return this.width;
+        return width;
     }
 
     public Integer getHeight() {
-        return this.height;
+        return height;
     }
 
     @Override

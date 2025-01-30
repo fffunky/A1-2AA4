@@ -1,62 +1,73 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Matrix {
-    private static final Logger logger = LogManager.getLogger();
-    private final List<List<Integer>> matrix = new ArrayList<>();
+public class Matrix<T> {
+    private final int rows;
+    private final int cols;
+    private final List<List<T>> data;
 
-    public Matrix(Integer width, Integer height) {
+    public Matrix(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        this.data = new ArrayList<>();
 
-        for (int i = 0; i < height; i++) {
-            this.matrix.add(new ArrayList<>());
-            for (int j = 0; j < width; j++) {
-                this.matrix.get(i).add(0);
+        for (int r = 0; r < rows; r++) {
+            List<T> row = new ArrayList<>();
+            for (int c = 0; c < cols; c++) {
+                row.add(null); // initialize matrix will null values
             }
+            data.add(row);
         }
     }
 
-    public void Set(int row, int col, int value) {
-        try {
-            this.matrix.get(row).set(col, value);
-        } catch (IndexOutOfBoundsException e) {
-            logger.error("- Matrix.Set() Out of Bounds: {}", e.getMessage());
+    public void Set(int row, int col, T value) {
+        if (isValidIndex(row, col)) {
+            data.get(row).set(col, value);
+        } else {
+            throw new IndexOutOfBoundsException("Invalid row or column index");
         }
     }
 
-    // Returns the value at index (row, col), or null if out of bounds.
-    public Integer Get(int row, int col) {
-        Integer value;
-        try {
-            value = this.matrix.get(row).get(col);
-            return value;
-        } catch (IndexOutOfBoundsException e) {
-            return null;
+    public T Get(int row, int col) {
+        if (isValidIndex(row, col)) {
+            return data.get(row).get(col);
+        } else {
+            throw new IndexOutOfBoundsException("Invalid row or column index");
         }
     }
 
-    public List<Integer> getRow(int idx) {
-        return this.matrix.get(idx);
+    public List<T> getRow(int row) {
+        if (row >= 0 && row < rows) {
+            return new ArrayList<>(data.get(row));
+        } else {
+            throw new IndexOutOfBoundsException("Invalid row index");
+        }
     }
 
-    public List<Integer> getCol(int idx) {
-        List<Integer> col = new ArrayList<>();
-
-        for (int i = 0; i < this.matrix.size(); i++) {
-            col.add(this.matrix.get(i).get(idx));
+    public List<T> getCol(int col) {
+        if (col >= 0 && col < cols) {
+            List<T> column = new ArrayList<>();
+            for (List<T> row : data) {
+                column.add(row.get(col));
+            }
+            return column;
+        } else {
+            throw new IndexOutOfBoundsException("Invalid column index");
         }
+    }
 
-        return col;
+    private boolean isValidIndex(int row, int col) {
+        return row >= 0 && row < rows && col >= 0 && col < cols;
     }
 
     @Override
     public String toString() {
-        return "Matrix{" + matrix +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        for (List<T> row : data) {
+            sb.append(row.toString()).append("\n");
+        }
+        return sb.toString();
     }
 }
