@@ -8,39 +8,11 @@ import java.util.Objects;
 public class MazeRunner {
     private static final Logger logger = LogManager.getLogger();
 
-    public enum Heading {
-        NORTH, EAST, SOUTH, WEST;
-
-        public Heading toRight() {
-            if (this == NORTH) {
-                return EAST;
-            } else if (this == EAST) {
-                return SOUTH;
-            } else if (this == SOUTH) {
-                return WEST;
-            } else {
-                return NORTH;
-            }
-        }
-
-        public Heading toLeft() {
-            if (this == NORTH) {
-                return WEST;
-            } else if (this == EAST) {
-                return NORTH;
-            } else if (this == SOUTH) {
-                return EAST;
-            } else {
-                return SOUTH;
-            }
-        }
-    }
-
-    private Maze maze;
+    private final Maze maze;
     private Position position;
-    private Position target;
-    private Path path = new Path();
-    private Heading heading = Heading.EAST;
+    private final Position target;
+    private final Path path = new Path();
+    private final Compass compass = new Compass(Heading.EAST);
 
     public MazeRunner(Maze maze) {
         this.maze = maze;
@@ -65,7 +37,7 @@ public class MazeRunner {
     }
 
     public Heading getHeading() {
-        return this.heading;
+        return compass.getHeading();
     }
 
     public Path getPath() {
@@ -141,39 +113,39 @@ public class MazeRunner {
     // returns a 1 or 0 if there is a wall or space ahead, respectively,
     // or -1 if the space ahead is out of bounds.
     private Cell peekAhead() {
-        if (this.heading == Heading.NORTH) {
+        if (compass.getHeading() == Heading.NORTH) {
             return this.peekNorth();
-        } else if (this.heading == Heading.EAST) {
+        } else if (compass.getHeading() == Heading.EAST) {
             return this.peekEast();
-        } else if (this.heading == Heading.SOUTH) {
+        } else if (compass.getHeading() == Heading.SOUTH) {
             return this.peekSouth();
-        } else if (this.heading == Heading.WEST) {
+        } else if (compass.getHeading() == Heading.WEST) {
             return this.peekWest();
         }
         return null;
     }
 
     private Cell peekRight() {
-        if (this.heading == Heading.NORTH) {
+        if (compass.getHeading() == Heading.NORTH) {
             return this.peekEast();
-        } else if (this.heading == Heading.EAST) {
+        } else if (compass.getHeading() == Heading.EAST) {
             return this.peekSouth();
-        } else if (this.heading == Heading.SOUTH) {
+        } else if (compass.getHeading() == Heading.SOUTH) {
             return this.peekWest();
-        } else if (this.heading == Heading.WEST) {
+        } else if (compass.getHeading() == Heading.WEST) {
             return this.peekNorth();
         }
         return null;
     }
 
     private Cell peekLeft() {
-        if (this.heading == Heading.NORTH) {
+        if (compass.getHeading() == Heading.NORTH) {
             return this.peekWest();
-        } else if (this.heading == Heading.EAST) {
+        } else if (compass.getHeading() == Heading.EAST) {
             return this.peekNorth();
-        } else if (this.heading == Heading.SOUTH) {
+        } else if (compass.getHeading() == Heading.SOUTH) {
             return this.peekEast();
-        } else if (this.heading == Heading.WEST) {
+        } else if (compass.getHeading() == Heading.WEST) {
             return this.peekSouth();
         }
         return null;
@@ -181,13 +153,13 @@ public class MazeRunner {
 
     // returns the coordinate of the position ahead, or null if that position is out of bounds
     private Position getPositionAhead() {
-        if (this.heading == Heading.NORTH) {
+        if (compass.getHeading() == Heading.NORTH) {
             return this.getNorthPosition();
-        } else if (this.heading == Heading.EAST) {
+        } else if (compass.getHeading() == Heading.EAST) {
             return this.getEastPosition();
-        } else if (this.heading == Heading.SOUTH) {
+        } else if (compass.getHeading() == Heading.SOUTH) {
             return this.getSouthPosition();
-        } else if (this.heading == Heading.WEST) {
+        } else if (compass.getHeading() == Heading.WEST) {
             return this.getWestPosition();
         }
         return null;
@@ -270,11 +242,11 @@ public class MazeRunner {
     }
 
     private void turnRight() {
-        this.heading = this.heading.toRight();
+        compass.toRight();
     }
 
     private void turnLeft() {
-        this.heading = this.heading.toLeft();
+        compass.toLeft();
     }
 
     public String toString() {
@@ -294,7 +266,7 @@ public class MazeRunner {
             }
             sb.append("\n");
         }
-        sb.append("Heading: " + this.heading.toString() + "\n");
+        sb.append("Heading: " + compass.getHeading().toString() + "\n");
         sb.append("Position: " + this.position.toString() + "\n");
 
         return sb.toString();
