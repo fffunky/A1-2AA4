@@ -5,19 +5,20 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 
 public class Path {
 
     private static final Logger logger = LogManager.getLogger();
-    private ArrayList<Instruction> instructions;
+    private final List<Instruction> instructions;
 
     public Path() {
         this.instructions = new ArrayList<>();
     }
 
-    public ArrayList<Instruction> getInstructions() {
+    public List<Instruction> getInstructions() {
         return instructions;
     }
 
@@ -25,7 +26,7 @@ public class Path {
         s = String.join("", s.split(" "));
         Path p = new Path();
 
-        if (s.length() == 0) {
+        if (s.isEmpty()) {
             return new Path();
         }
 
