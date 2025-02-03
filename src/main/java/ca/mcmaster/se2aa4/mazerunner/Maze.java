@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class Maze {
+public class Maze implements IMaze {
     private Matrix<Cell> maze;
     private Integer width;
     private Integer height;
