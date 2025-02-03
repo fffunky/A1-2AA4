@@ -5,16 +5,16 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 
-public class MazeRunner {
+public class MazeRunner implements IMazeRunner {
     private static final Logger logger = LogManager.getLogger();
 
-    private final Maze maze;
+    private final IMaze maze;
     private Position position;
     private final Position target;
     private final Path path = new Path();
     private final Compass compass = new Compass(Heading.EAST);
 
-    public MazeRunner(Maze maze) {
+    public MazeRunner(IMaze maze) {
         this.maze = maze;
         this.position = maze.getStart();
         this.target = maze.getEnd();

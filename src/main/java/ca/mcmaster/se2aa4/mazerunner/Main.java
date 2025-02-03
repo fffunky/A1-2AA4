@@ -83,7 +83,7 @@ public class Main {
         initCLI(args);
         String fileInput = readFile(filePath);
         Maze maze = new Maze(fileInput);
-        MazeRunner mr = new MazeRunner(maze);
+        IMazeRunner mr = new MazeRunner(maze);
 
         if (pathString == null) {
             // no -p flag
