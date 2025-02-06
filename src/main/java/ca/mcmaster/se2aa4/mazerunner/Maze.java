@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Maze implements IMaze {
-    private Matrix<Cell> maze;
+    private IMatrix<Cell> maze;
     private Integer width;
     private Integer height;
 
@@ -79,7 +79,7 @@ public class Maze implements IMaze {
         return null;
     }
 
-    public Matrix<Cell> getMatrix() {
+    public IMatrix<Cell> getMatrix() {
         return maze;
     }
 
