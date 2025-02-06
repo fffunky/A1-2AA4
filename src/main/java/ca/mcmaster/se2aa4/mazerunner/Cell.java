@@ -1,7 +1,7 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-public interface Cell {
-    CellType getType();
-    boolean isEmpty();
+public abstract class Cell {
+    abstract CellType  .getType();
+    abstract boolean isEmpty();
 }
 

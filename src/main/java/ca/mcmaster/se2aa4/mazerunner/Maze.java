@@ -1,6 +1,5 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 

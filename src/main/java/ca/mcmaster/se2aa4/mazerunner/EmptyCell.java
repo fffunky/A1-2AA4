@@ -1,6 +1,6 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-public class EmptyCell implements Cell {
+public class EmptyCell extends Cell {
 
     public CellType getType() {
         return CellType.EMPTY;

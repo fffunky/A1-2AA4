@@ -1,6 +1,6 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-public class NullCell implements Cell {
+public class NullCell extends Cell {
 
     public CellType getType() {
         return CellType.NULL;

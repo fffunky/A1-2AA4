@@ -1,6 +1,6 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-public class WallCell implements Cell {
+public class WallCell extends Cell {
 
     public CellType getType() {
         return CellType.WALL;
