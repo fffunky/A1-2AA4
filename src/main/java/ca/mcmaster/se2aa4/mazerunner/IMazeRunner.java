@@ -5,6 +5,6 @@ interface IMazeRunner {
     public Integer getY();
     public Position getPosition();
     public Position getTarget();
-    public void followPath(Path p);
+    public boolean isValidSolution(Path p);
     public Path runPathfinder();
 }

@@ -2,6 +2,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Position {
     public Integer x;
@@ -18,6 +19,14 @@ public class Position {
 
     public Integer Y() {
         return this.y;
+    }
+
+    public Position Copy() {
+        return new Position(this.x, this.y);
+    }
+
+    public boolean Equals(Position p) {
+        return Objects.equals(this.X(), p.X()) && Objects.equals(this.Y(), p.Y());
     }
 
     public List<Integer> Coords() {

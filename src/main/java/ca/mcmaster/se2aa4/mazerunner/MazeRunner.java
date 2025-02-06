@@ -10,7 +10,7 @@ public class MazeRunner implements IMazeRunner {
 
     private final IMaze maze;
     private Position position;
-    private final Position target;
+    private Position target;
     private final Path path = new Path();
     private final Compass compass = new Compass(Heading.EAST);
 
@@ -36,6 +36,18 @@ public class MazeRunner implements IMazeRunner {
         return this.target;
     }
 
+    public void setPosition(Position p) {
+        if (!Objects.equals(maze.getCellAt(p.X(), p.Y()), new NullCell())) {
+            this.position = p;
+        }
+    }
+
+    public void setTarget(Position t) {
+        if (!Objects.equals(maze.getCellAt(t.X(), t.Y()), new NullCell())) {
+            this.target = t;
+        }
+    }
+
     public Heading getHeading() {
         return compass.getHeading();
     }
@@ -44,7 +56,28 @@ public class MazeRunner implements IMazeRunner {
         return this.path;
     }
 
-    public void followPath(Path p) {
+    public boolean isValidSolution(Path p) {
+        Position startPos = position.Copy();
+
+        followPath(p);
+        if ( position.Equals(target) ) {
+            return true;
+        }
+
+
+        // switch exit and entry and try following the path again.
+        Position newPos = target.Copy();
+        setPosition(newPos);
+        setTarget(startPos);
+
+        compass.setHeading(Heading.WEST);
+
+        followPath(p);
+
+        return position.Equals(target);
+    }
+
+    private void followPath(Path p) {
 
         for (Instruction instruction : p.getInstructions()) {
             for (int i = 0; i < instruction.getFrequency(); i++) {

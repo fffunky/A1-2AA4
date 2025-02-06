@@ -102,12 +102,9 @@ public class Main {
             }
 
             logger.info("**** Following path: {}\n", pathString);
-            mr.followPath(p);
 
-            Position endPos = mr.getPosition();
-            Position target = mr.getTarget();
 
-            if ( (endPos.X() == target.X()) && (endPos.Y() == target.Y()) ) {
+            if ( mr.isValidSolution(p) ) {
                 System.out.printf("Path '%s' is a valid solution to the maze\n\n", pathString);
             } else {
                 System.out.printf("Path '%s' is not a valid solution to the maze\n\n", pathString);
