@@ -88,18 +88,24 @@ public class Path {
         String[] instructions = canonical.split(" ");
 
         for (String instruction : instructions) {
-            factorized.append(instruction.length());
+            if (instruction.length() != 1) {
+                factorized.append(instruction.length());
+            }
             factorized.append(instruction.charAt(0));
             factorized.append(" ");
         }
         
-        return factorized.toString();
+        return factorized.toString().strip();
     }
 
     public String Canonical() {
         StringBuilder canonical = new StringBuilder();
         Instruction cur = null;
         Instruction next = null;
+
+        if (instructions.size() == 1) {
+            canonical.append(instructions.get(0).getDirection());
+        }
 
         for (int i = 0; i < this.instructions.size() - 1; i++) {
             cur = this.instructions.get(i);
@@ -114,7 +120,11 @@ public class Path {
             }
         }
 
-        canonical.append(next.getDirection());
+        if (next != null) {
+            for (int i = 0; i < next.getFrequency(); i++) {
+                canonical.append(next.getDirection());
+            }
+        }
 
         return canonical.toString();
     }

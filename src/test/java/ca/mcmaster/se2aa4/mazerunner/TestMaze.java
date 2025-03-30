@@ -1,38 +1,45 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-public class Maze implements IMaze {
+public class TestMaze implements IMaze {
+    private int width;
+    private int height;
+    private Position start;
+    private Position end;
     private IMatrix<Cell> maze;
-    private Integer width;
-    private Integer height;
+    private static final Cell WALL = new TestCell(CellType.WALL);
+    private static final Cell EMPTY = new TestCell(CellType.EMPTY);
+    private static final Cell NULL_CELL = new TestCell(CellType.NULL);
 
-    public Maze(String fileInput) {
-        initMaze(fileInput);
+    public TestMaze(String mazeString) {
+        initMaze(mazeString);
     }
 
-    private void initMaze(String fileInput) {
+    private void initMaze(String mazeString) {
         int row = 0, col = 0;
-        height = fileInput.split("\n").length;
-        width = fileInput.split("\n")[0].length();
+        height = mazeString.split("\n").length;
+        width = mazeString.split("\n")[0].length();
 
         maze = new Matrix<Cell>(height, width);
 
-        for (String line : fileInput.split("\n")) {
+        for (String line : mazeString.split("\n")) {
             String[] s = line.split("");
 
             for (int i = 0; i < width; i++) {
                 try {
                     if (Objects.equals(s[i], " ")) {
-                        maze.Set(row, col, new EmptyCell());
+                        maze.Set(row, col, EMPTY);
                     } else if (Objects.equals(s[i], "#")) {
-                        maze.Set(row, col, new WallCell());
+                        maze.Set(row, col, WALL);
                     } else {
-                        maze.Set(row, col, new EmptyCell());
+                        maze.Set(row, col, EMPTY);
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    maze.Set(row, col, new EmptyCell());
+                    maze.Set(row, col, EMPTY);
                 }
 
                 col++;
@@ -45,15 +52,16 @@ public class Maze implements IMaze {
         }
     }
 
-    // returns the value of the maze at (row, col), or NullCell if out of bounds.
+    @Override
     public Cell getCellAt(int row, int col) {
         if (maze.Get(row, col) == null) {
-            return new NullCell();
+            return NULL_CELL;
         }
 
         return maze.Get(row, col);
     }
 
+    @Override
     public Position getStart() {
         List<Cell> col = getMatrix().getCol(0);
 
@@ -66,6 +74,7 @@ public class Maze implements IMaze {
         return null;
     }
 
+    @Override
     public Position getEnd() {
         List<Cell> col = getMatrix().getCol(this.getWidth() - 1);
 
@@ -78,28 +87,18 @@ public class Maze implements IMaze {
         return null;
     }
 
+    @Override
     public IMatrix<Cell> getMatrix() {
-        return maze;
-    }
-
-    public Integer getWidth() {
-        return width;
-    }
-
-    public Integer getHeight() {
-        return height;
+        return this.maze;
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
+    public Integer getWidth() {
+        return this.width;
+    }
 
-        for (int i = 0; i < this.getHeight(); i++) {
-            for (int j = 0; j < this.getWidth(); j++) {
-                sb.append(maze.Get(i,j).toString());
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
+    @Override
+    public Integer getHeight() {
+        return this.height;
     }
 }
