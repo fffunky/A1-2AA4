@@ -8,13 +8,13 @@ import java.util.Objects;
 public class MazeRunner implements IMazeRunner {
     private static final Logger logger = LogManager.getLogger();
 
-    private final IMaze maze;
+    private final Maze maze;
     private Position position;
     private Position target;
     private final Path path = new Path();
     private final Compass compass = new Compass(Heading.EAST);
 
-    public MazeRunner(IMaze maze) {
+    public MazeRunner(Maze maze) {
         this.maze = maze;
         this.position = maze.getStart();
         this.target = maze.getEnd();

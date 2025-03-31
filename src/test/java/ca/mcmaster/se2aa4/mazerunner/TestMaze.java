@@ -1,16 +1,14 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
-public class TestMaze implements IMaze {
+public class TestMaze implements Maze {
     private int width;
     private int height;
     private Position start;
     private Position end;
-    private IMatrix<Cell> maze;
+    private Matrix<Cell> maze;
     private static final Cell WALL = new TestCell(CellType.WALL);
     private static final Cell EMPTY = new TestCell(CellType.EMPTY);
     private static final Cell NULL_CELL = new TestCell(CellType.NULL);
@@ -24,7 +22,7 @@ public class TestMaze implements IMaze {
         height = mazeString.split("\n").length;
         width = mazeString.split("\n")[0].length();
 
-        maze = new Matrix<Cell>(height, width);
+        maze = new ArrayMatrix<Cell>(height, width);
 
         for (String line : mazeString.split("\n")) {
             String[] s = line.split("");
@@ -87,8 +85,7 @@ public class TestMaze implements IMaze {
         return null;
     }
 
-    @Override
-    public IMatrix<Cell> getMatrix() {
+    public Matrix<Cell> getMatrix() {
         return this.maze;
     }
 

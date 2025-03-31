@@ -1,9 +1,7 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
-import java.util.Arrays;
 
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
@@ -82,7 +80,8 @@ public class Main {
 
         initCLI(args);
         String fileInput = readFile(filePath);
-        Maze maze = new Maze(fileInput);
+        MazeBuilder mb = new ArrayMazeBuilder(fileInput);
+        Maze maze = mb.buildMaze();
         IMazeRunner mr = new MazeRunner(maze);
 
         if (pathString == null) {
@@ -113,5 +112,17 @@ public class Main {
         }
 
         logger.info("** End of MazeRunner");
+
+        GraphMazeBuilder gb = new GraphMazeBuilder(fileInput);
+        GraphMaze gm = (GraphMaze) gb.buildMaze();
+
+        for (int i = 0; i < gm.getHeight(); i++) {
+            for (int j = 0; j < gm.getWidth(); j++) {
+                System.out.print(gm.getCellAt(i, j).toString());
+            }
+            System.out.println();
+        }
+        System.out.println(gm.getStart().toString());
+        System.out.println(gm.getEnd().toString());
     }
 }

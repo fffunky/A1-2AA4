@@ -9,7 +9,7 @@ public class MazeRunnerTest {
     @Test
     void ConstructorTest() {
         class ConstructorTestCase {
-            private final IMaze maze;
+            private final Maze maze;
             private final Position expectedStart;
             private final Position expectedTarget;
             private ConstructorTestCase(String mazeString, Position expectedStart, Position expectedTarget) {

@@ -5,10 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MatrixTest<T> {
+public class ArrayMatrixTest<T> {
     @Test
     @DisplayName("Matrix constructor and initialization")
     public void ConstructorTest() {
@@ -36,7 +35,7 @@ public class MatrixTest<T> {
         );
 
         for (ConstructorTestCase tc : testCases) {
-            IMatrix<Integer> m = new Matrix<Integer>(tc.rows, tc.cols);
+            Matrix<Integer> m = new ArrayMatrix<Integer>(tc.rows, tc.cols);
 
             int rowCount = 0;
             while (true) {
@@ -67,7 +66,7 @@ public class MatrixTest<T> {
     public void GetSetTest() {
         int rows = 5;
         int cols = 5;
-        IMatrix<Integer> m = new Matrix<Integer>(rows, cols);
+        Matrix<Integer> m = new ArrayMatrix<Integer>(rows, cols);
 
         // Populate matrix with valid indices
         Integer counter = 0;
