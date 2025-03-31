@@ -82,7 +82,7 @@ public class Main {
         String fileInput = readFile(filePath);
         MazeBuilder mb = new ArrayMazeBuilder(fileInput);
         Maze maze = mb.buildMaze();
-        IMazeRunner mr = new MazeRunner(maze);
+        MazeRunner mr = new ArrayMazeRunner(maze);
 
         if (pathString == null) {
             // no -p flag
@@ -113,16 +113,5 @@ public class Main {
 
         logger.info("** End of MazeRunner");
 
-        GraphMazeBuilder gb = new GraphMazeBuilder(fileInput);
-        GraphMaze gm = (GraphMaze) gb.buildMaze();
-
-        for (int i = 0; i < gm.getHeight(); i++) {
-            for (int j = 0; j < gm.getWidth(); j++) {
-                System.out.print(gm.getCellAt(i, j).toString());
-            }
-            System.out.println();
-        }
-        System.out.println(gm.getStart().toString());
-        System.out.println(gm.getEnd().toString());
     }
 }

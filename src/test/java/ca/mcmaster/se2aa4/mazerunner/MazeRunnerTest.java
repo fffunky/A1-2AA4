@@ -42,7 +42,7 @@ public class MazeRunnerTest {
         );
 
         for (ConstructorTestCase tc : testCases) {
-            MazeRunner mr = new MazeRunner(tc.maze);
+            ArrayMazeRunner mr = new ArrayMazeRunner(tc.maze);
             assertEquals(mr.getPosition().Coords(), tc.expectedStart.Coords());
             assertEquals(mr.getTarget().Coords(), tc.expectedTarget.Coords());
             assertEquals(mr.getHeading(), Heading.EAST);

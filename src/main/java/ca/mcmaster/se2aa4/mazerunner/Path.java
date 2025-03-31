@@ -72,6 +72,20 @@ public class Path {
         return p;
     }
 
+    public static Path SumPaths(Path p1, Path p2) {
+        Path sp = new Path();
+
+        for (Instruction i : p1.getInstructions()) {
+            sp.addInstruction(i);
+        }
+
+        for (Instruction i : p2.getInstructions()) {
+            sp.addInstruction(i);
+        }
+
+        return sp;
+    }
+
     public void addInstruction(String instruction) {
         instructions.add(new Instruction(instruction));
     }
