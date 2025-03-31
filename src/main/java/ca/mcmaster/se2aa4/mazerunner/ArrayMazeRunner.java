@@ -3,6 +3,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class ArrayMazeRunner implements MazeRunner {
@@ -14,10 +15,21 @@ public class ArrayMazeRunner implements MazeRunner {
     private final Path path = new Path();
     private final Compass compass = new Compass(Heading.EAST);
 
+    public HashMap<Action, Runnable> cmdMap = new HashMap<>();
+
     public ArrayMazeRunner(Maze maze) {
         this.maze = maze;
         this.position = maze.getStart();
         this.target = maze.getEnd();
+
+        this.cmdMap.put(Action.FORWARD, () -> {});
+        this.cmdMap.put(Action.LEFT, () -> {});
+        this.cmdMap.put(Action.RIGHT, () -> {});
+        this.cmdMap.put(Action.UTURN, () -> {});
+    }
+
+    public void setCommand(Action a, Runnable r) {
+        this.cmdMap.put(a, r);
     }
 
     public Integer getX() {
@@ -52,8 +64,16 @@ public class ArrayMazeRunner implements MazeRunner {
         return compass.getHeading();
     }
 
+    public Compass getCompass() {
+        return compass;
+    }
+
     public Path getPath() {
         return this.path;
+    }
+
+    public Maze getMaze() {
+        return this.maze;
     }
 
     public boolean isValidSolution(Path p) {
@@ -97,6 +117,22 @@ public class ArrayMazeRunner implements MazeRunner {
         }
     }
 
+    public void moveFwd() {
+        cmdMap.get(Action.FORWARD).run();
+    }
+
+    public void leftTurn() {
+        cmdMap.get(Action.LEFT).run();
+    }
+
+    public void rightTurn() {
+        cmdMap.get(Action.RIGHT).run();
+    }
+
+    public void uTurn() {
+        cmdMap.get(Action.UTURN).run();
+    }
+
     public Path runPathfinder() {
         boolean found = false;
         while (!found) {
@@ -113,23 +149,21 @@ public class ArrayMazeRunner implements MazeRunner {
                     (right.isEmpty() && ahead.isEmpty() && !left.isEmpty() ) ||
                     (right.isEmpty() && !ahead.isEmpty() && left.isEmpty()) ||
                     (right.isEmpty() && !ahead.isEmpty() && !left.isEmpty()) ) {
-                turnRight();
-                moveForward();
+                rightTurn();
+                moveFwd();
                 path.addInstruction("1R");
                 path.addInstruction("1F");
             } else if ( (!right.isEmpty() && ahead.isEmpty() && left.isEmpty()) ||
                     (!right.isEmpty() && ahead.isEmpty() && !left.isEmpty())) {
-                moveForward();
+                moveFwd();
                 path.addInstruction("1F");
             } else if (left.isEmpty() && !ahead.isEmpty() && !right.isEmpty()) {
-                turnLeft();
-                moveForward();
+                leftTurn();
                 path.addInstruction("1L");
                 path.addInstruction("1F");
             } else {
-                turnRight();
-                turnRight();
-                moveForward();
+                uTurn();
+                moveFwd();
                 path.addInstruction("2R");
                 path.addInstruction("1F");
             }
@@ -145,7 +179,7 @@ public class ArrayMazeRunner implements MazeRunner {
 
     // returns a 1 or 0 if there is a wall or space ahead, respectively,
     // or -1 if the space ahead is out of bounds.
-    private Cell peekAhead() {
+    public Cell peekAhead() {
         if (compass.getHeading() == Heading.NORTH) {
             return this.peekNorth();
         } else if (compass.getHeading() == Heading.EAST) {
@@ -158,7 +192,7 @@ public class ArrayMazeRunner implements MazeRunner {
         return null;
     }
 
-    private Cell peekRight() {
+    public Cell peekRight() {
         if (compass.getHeading() == Heading.NORTH) {
             return this.peekEast();
         } else if (compass.getHeading() == Heading.EAST) {
@@ -171,7 +205,7 @@ public class ArrayMazeRunner implements MazeRunner {
         return null;
     }
 
-    private Cell peekLeft() {
+    public Cell peekLeft() {
         if (compass.getHeading() == Heading.NORTH) {
             return this.peekWest();
         } else if (compass.getHeading() == Heading.EAST) {

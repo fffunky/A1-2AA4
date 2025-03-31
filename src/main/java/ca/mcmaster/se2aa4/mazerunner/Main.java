@@ -7,6 +7,8 @@ import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.naming.ldap.Control;
+
 public class Main {
 
     private static final Logger logger = LogManager.getLogger();
@@ -82,12 +84,12 @@ public class Main {
         String fileInput = readFile(filePath);
         MazeBuilder mb = new ArrayMazeBuilder(fileInput);
         Maze maze = mb.buildMaze();
-        MazeRunner mr = new ArrayMazeRunner(maze);
+        ArrayControlCentre cc = new ArrayControlCentre(maze);
 
         if (pathString == null) {
             // no -p flag
             logger.info("**** Computing path\n");
-            Path path = mr.runPathfinder();
+            Path path = cc.runPathfinder();
             System.out.printf("Canonical: %s\n", path.Canonical());
             System.out.printf("Factorized: %s\n\n", path.Factorized());
         } else {
@@ -102,7 +104,7 @@ public class Main {
 
             logger.info("**** Following path: {}\n", pathString);
 
-
+            ArrayMazeRunner mr = (ArrayMazeRunner) cc.getRunner();
             if ( mr.isValidSolution(p) ) {
                 System.out.printf("Path '%s' is a valid solution to the maze\n\n", pathString);
             } else {

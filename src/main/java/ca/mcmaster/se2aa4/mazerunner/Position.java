@@ -36,6 +36,22 @@ public class Position {
         return coords;
     }
 
+    public Position toNorth() {
+        return new Position(this.x, this.y - 1);
+    }
+
+    public Position toEast() {
+        return new Position(this.x + 1, this.y);
+    }
+
+    public Position toSouth() {
+        return new Position(this.x, this.y + 1);
+    }
+
+    public Position toWest() {
+        return new Position(this.x - 1, this.y);
+    }
+
     public String toString() {
         return "(" + this.x + "," + this.y + ")";
     }

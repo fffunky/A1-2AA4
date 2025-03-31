@@ -60,6 +60,17 @@ public class TestMaze implements Maze {
     }
 
     @Override
+    public Cell getCellAt(Position p) {
+        Integer row = p.X();
+        Integer col = p.Y();
+        if (maze.Get(row, col) == null) {
+            return NULL_CELL;
+        }
+
+        return maze.Get(row, col);
+    }
+
+    @Override
     public Position getStart() {
         List<Cell> col = getMatrix().getCol(0);
 

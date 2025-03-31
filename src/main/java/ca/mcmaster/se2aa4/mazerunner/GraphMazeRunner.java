@@ -1,5 +1,7 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import java.util.Objects;
+
 public class GraphMazeRunner implements MazeRunner {
     private final Maze maze;
     private Position position;
@@ -13,6 +15,10 @@ public class GraphMazeRunner implements MazeRunner {
         this.target = maze.getEnd();
     }
 
+    public void setCommand(Action a, Runnable r) {
+
+    }
+
     @Override
     public Integer getX() {
         return this.position.X();
@@ -23,6 +29,10 @@ public class GraphMazeRunner implements MazeRunner {
         return this.position.Y();
     }
 
+    public void setPosition(Position p) {
+            this.position = p;
+    }
+
     @Override
     public Position getPosition() {
         return this.position;
@@ -31,6 +41,14 @@ public class GraphMazeRunner implements MazeRunner {
     @Override
     public Position getTarget() {
         return this.target;
+    }
+
+    public Maze getMaze() {
+        return maze;
+    }
+
+    public Compass getCompass() {
+        return compass;
     }
 
     @Override

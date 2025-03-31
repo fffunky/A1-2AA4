@@ -24,6 +24,16 @@ public class ArrayMaze implements Maze {
         return maze.Get(row, col);
     }
 
+    public Cell getCellAt(Position p) {
+        Integer row = p.X();
+        Integer col = p.Y();
+        if (maze.Get(row, col) == null) {
+            return new NullCell();
+        }
+
+        return maze.Get(row, col);
+    }
+
     public Position getStart() {
         List<Cell> col = getMatrix().getCol(0);
 

@@ -77,6 +77,18 @@ public class GraphMaze implements Maze {
     }
 
     @Override
+    public Cell getCellAt(Position p) {
+        Integer row = p.X();
+        Integer col = p.Y();
+        Integer nID = (row * this.getWidth()) + col;
+        if (this.getNodeFromId(nID) == null) {
+            return new WallCell();
+        } else {
+            return this.getNodeFromId(nID).getCell();
+        }
+    }
+
+    @Override
     public Position getStart() {
         List<MazeNode> entrances = new ArrayList<>();
         for (MazeNode node : nodes) {
