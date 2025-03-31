@@ -55,9 +55,4 @@ public class GraphMazeRunner implements MazeRunner {
     public boolean isValidSolution(Path p) {
         return false;
     }
-
-    @Override
-    public Path runPathfinder() {
-        return null;
-    }
 }

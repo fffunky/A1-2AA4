@@ -8,7 +8,6 @@ public interface MazeRunner {
     public void setPosition(Position p);
     public Position getTarget();
     public boolean isValidSolution(Path p);
-    public Path runPathfinder();
     public Maze getMaze();
     public Compass getCompass();
 }

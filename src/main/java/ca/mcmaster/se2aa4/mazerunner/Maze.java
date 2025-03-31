@@ -7,4 +7,5 @@ public interface Maze {
     public Position getEnd();
     public Integer getWidth();
     public Integer getHeight();
+    public boolean isValidIndex(Integer row, Integer col);
 }

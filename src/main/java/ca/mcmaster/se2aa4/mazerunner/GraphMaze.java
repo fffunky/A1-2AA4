@@ -67,6 +67,11 @@ public class GraphMaze implements Maze {
     }
 
     @Override
+    public boolean isValidIndex(Integer row, Integer col) {
+        return row >= 0 && row < this.height && col >= 0 && col < this.width;
+    }
+
+    @Override
     public Cell getCellAt(int row, int col) {
         Integer nID = (row * this.getWidth()) + col;
         if (this.getNodeFromId(nID) == null) {

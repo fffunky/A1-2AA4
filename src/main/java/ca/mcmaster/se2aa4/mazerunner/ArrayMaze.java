@@ -34,6 +34,11 @@ public class ArrayMaze implements Maze {
         return maze.Get(row, col);
     }
 
+    @Override
+    public boolean isValidIndex(Integer row, Integer col) {
+        return row >= 0 && row < this.height && col >= 0 && col < this.width;
+    }
+
     public Position getStart() {
         List<Cell> col = getMatrix().getCol(0);
 

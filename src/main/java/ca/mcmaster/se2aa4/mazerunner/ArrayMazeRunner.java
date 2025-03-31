@@ -103,13 +103,13 @@ public class ArrayMazeRunner implements MazeRunner {
             for (int i = 0; i < instruction.getFrequency(); i++) {
                 switch (instruction.getDirection()) {
                     case "F":
-                        moveForward();
+                        moveFwd();
                         break;
                     case "L":
-                        turnLeft();
+                        leftTurn();
                         break;
                     case "R":
-                        turnRight();
+                        rightTurn();
                         break;
                 }
                 path.addInstruction(instruction);
@@ -131,50 +131,6 @@ public class ArrayMazeRunner implements MazeRunner {
 
     public void uTurn() {
         cmdMap.get(Action.UTURN).run();
-    }
-
-    public Path runPathfinder() {
-        boolean found = false;
-        while (!found) {
-
-            Cell ahead = this.peekAhead();
-            Cell right = this.peekRight();
-            Cell left = this.peekLeft();
-
-
-            assert right != null;
-            assert left != null;
-            assert ahead != null;
-            if ( (right.isEmpty() && ahead.isEmpty() && left.isEmpty()) ||
-                    (right.isEmpty() && ahead.isEmpty() && !left.isEmpty() ) ||
-                    (right.isEmpty() && !ahead.isEmpty() && left.isEmpty()) ||
-                    (right.isEmpty() && !ahead.isEmpty() && !left.isEmpty()) ) {
-                rightTurn();
-                moveFwd();
-                path.addInstruction("1R");
-                path.addInstruction("1F");
-            } else if ( (!right.isEmpty() && ahead.isEmpty() && left.isEmpty()) ||
-                    (!right.isEmpty() && ahead.isEmpty() && !left.isEmpty())) {
-                moveFwd();
-                path.addInstruction("1F");
-            } else if (left.isEmpty() && !ahead.isEmpty() && !right.isEmpty()) {
-                leftTurn();
-                path.addInstruction("1L");
-                path.addInstruction("1F");
-            } else {
-                uTurn();
-                moveFwd();
-                path.addInstruction("2R");
-                path.addInstruction("1F");
-            }
-
-            if (position.X() == target.X() && position.Y() == target.Y()) {
-                found = true;
-            }
-
-        }
-
-        return this.path;
     }
 
     // returns a 1 or 0 if there is a wall or space ahead, respectively,

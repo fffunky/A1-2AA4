@@ -26,6 +26,8 @@ public class MoveForwardCommand implements Command {
     @Override
     public void execute() {
         Position posAhead = positionAhead();
-        runner.setPosition(posAhead);
+        if (runner.getMaze().isValidIndex(posAhead.X(), posAhead.Y())) {
+            runner.setPosition(posAhead);
+        }
     }
 }

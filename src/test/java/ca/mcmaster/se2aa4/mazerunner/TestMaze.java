@@ -60,6 +60,11 @@ public class TestMaze implements Maze {
     }
 
     @Override
+    public boolean isValidIndex(Integer row, Integer col) {
+        return row >= 0 && row < height && col >= 0 && col < width;
+    }
+
+    @Override
     public Cell getCellAt(Position p) {
         Integer row = p.X();
         Integer col = p.Y();
