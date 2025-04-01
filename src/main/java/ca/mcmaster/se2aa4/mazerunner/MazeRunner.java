@@ -10,4 +10,9 @@ public interface MazeRunner {
     public boolean isValidSolution(Path p);
     public Maze getMaze();
     public Compass getCompass();
+
+    void moveFwd();
+    void leftTurn();
+    void rightTurn();
+    void uTurn();
 }

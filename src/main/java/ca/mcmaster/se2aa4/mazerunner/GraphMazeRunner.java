@@ -1,5 +1,6 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class GraphMazeRunner implements MazeRunner {
@@ -9,6 +10,8 @@ public class GraphMazeRunner implements MazeRunner {
     private final Path path = new Path();
     private final Compass compass = new Compass(Heading.EAST);
 
+    public HashMap<Action, Runnable> cmdMap = new HashMap<>();
+
     public GraphMazeRunner(Maze maze) {
         this.maze = maze;
         this.position = maze.getStart();
@@ -16,7 +19,23 @@ public class GraphMazeRunner implements MazeRunner {
     }
 
     public void setCommand(Action a, Runnable r) {
+        cmdMap.put(a, r);
+    }
 
+    public void moveFwd() {
+        cmdMap.get(Action.FORWARD).run();
+    }
+
+    public void leftTurn() {
+        cmdMap.get(Action.LEFT).run();
+    }
+
+    public void rightTurn() {
+        cmdMap.get(Action.RIGHT).run();
+    }
+
+    public void uTurn() {
+        cmdMap.get(Action.UTURN).run();
     }
 
     @Override

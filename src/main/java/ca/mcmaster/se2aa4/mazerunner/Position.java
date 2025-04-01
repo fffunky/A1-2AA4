@@ -26,7 +26,7 @@ public class Position {
     }
 
     public boolean Equals(Position p) {
-        return Objects.equals(this.X(), p.X()) && Objects.equals(this.Y(), p.Y());
+        return this.X() == p.X() && this.Y() == p.Y();
     }
 
     public List<Integer> Coords() {

@@ -1,25 +1,24 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-public class WallNode implements MazeNode {
-
+public class NullNode implements MazeNode {
     private final Integer ID;
-    private final Cell cell = new WallCell();
+    private final Cell cell = new NullCell();
     private final Position position;
     private final boolean isEntrance;
 
-    public WallNode(Integer ID) {
+    public NullNode(Integer ID) {
         this.ID = ID;
         this.position = null;
         this.isEntrance = false;
     }
 
-    public WallNode(Integer ID, Integer x, Integer y) {
+    public NullNode(Integer ID, Integer x, Integer y) {
         this.ID = ID;
         this.position = new Position(x, y);
         this.isEntrance = false;
     }
 
-    public WallNode(Integer ID, Integer x, Integer y, Boolean isEntrance) {
+    public NullNode(Integer ID, Integer x, Integer y, Boolean isEntrance) {
         this.ID = ID;
         this.position = new Position(x, y);
         this.isEntrance = isEntrance;
@@ -42,7 +41,7 @@ public class WallNode implements MazeNode {
 
     @Override
     public boolean isCellEmpty() {
-        return this.cell.isEmpty();
+        return false;
     }
 
     @Override
@@ -62,11 +61,6 @@ public class WallNode implements MazeNode {
 
     @Override
     public Boolean isEntranceNode() {
-        return this.isEntrance;
-    }
-
-    @Override
-    public String toString() {
-        return this.ID().toString();
+        return false;
     }
 }

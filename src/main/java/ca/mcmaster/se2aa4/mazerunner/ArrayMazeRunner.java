@@ -174,20 +174,6 @@ public class ArrayMazeRunner implements MazeRunner {
         return null;
     }
 
-    // returns the coordinate of the position ahead, or null if that position is out of bounds
-    private Position getPositionAhead() {
-        if (compass.getHeading() == Heading.NORTH) {
-            return this.getNorthPosition();
-        } else if (compass.getHeading() == Heading.EAST) {
-            return this.getEastPosition();
-        } else if (compass.getHeading() == Heading.SOUTH) {
-            return this.getSouthPosition();
-        } else if (compass.getHeading() == Heading.WEST) {
-            return this.getWestPosition();
-        }
-        return null;
-    }
-
     private Cell peekNorth() {
         try {
             return this.maze.getCellAt(this.position.Y()-1, this.position.X());
@@ -219,57 +205,6 @@ public class ArrayMazeRunner implements MazeRunner {
             return new NullCell();
         }
 
-    }
-
-    private Position getNorthPosition() {
-        if (this.peekNorth() == null) {
-            return null;
-        } else {
-            return new Position(this.position.X(), this.position.Y() - 1);
-        }
-    }
-
-    private Position getEastPosition() {
-        if (this.peekEast() == null) {
-            return null;
-        } else {
-            return new Position(this.position.X() + 1, this.position.Y());
-        }
-    }
-
-    private Position getSouthPosition() {
-        if (this.peekSouth() == null) {
-            return null;
-        } else {
-            return new Position(this.position.X(), this.position.Y() + 1);
-        }
-    }
-
-    private Position getWestPosition() {
-        if (this.peekWest() == null) {
-            return null;
-        } else {
-            return new Position(this.position.X() - 1, this.position.Y());
-        }
-    }
-
-    private void moveForward() {
-        Cell cellAhead = this.peekAhead();
-
-        assert cellAhead != null;
-        if (cellAhead.isEmpty()) {
-            // if the space is empty then we move forward
-            this.position = getPositionAhead();
-        }
-        // otherwise the position doesn't change
-    }
-
-    private void turnRight() {
-        compass.toRight();
-    }
-
-    private void turnLeft() {
-        compass.toLeft();
     }
 
     public String toString() {

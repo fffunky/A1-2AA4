@@ -2,6 +2,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.List;
 
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
@@ -79,17 +80,17 @@ public class Main {
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
 
-
         initCLI(args);
         String fileInput = readFile(filePath);
-        MazeBuilder mb = new ArrayMazeBuilder(fileInput);
-        Maze maze = mb.buildMaze();
-        ArrayControlCentre cc = new ArrayControlCentre(maze);
+        MazeBuilder mb = new GraphMazeBuilder(fileInput);
+        GraphMaze maze = (GraphMaze) mb.buildMaze();
+        GraphControlCentre cc = new GraphControlCentre(maze);
 
         if (pathString == null) {
             // no -p flag
             logger.info("**** Computing path\n");
             Path path = cc.runPathfinder();
+
             System.out.printf("Canonical: %s\n", path.Canonical());
             System.out.printf("Factorized: %s\n\n", path.Factorized());
         } else {
@@ -104,8 +105,7 @@ public class Main {
 
             logger.info("**** Following path: {}\n", pathString);
 
-            ArrayMazeRunner mr = (ArrayMazeRunner) cc.getRunner();
-            if ( mr.isValidSolution(p) ) {
+            if ( cc.isValidSolution(p) ) {
                 System.out.printf("Path '%s' is a valid solution to the maze\n\n", pathString);
             } else {
                 System.out.printf("Path '%s' is not a valid solution to the maze\n\n", pathString);

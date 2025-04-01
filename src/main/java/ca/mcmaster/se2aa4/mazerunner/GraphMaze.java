@@ -17,8 +17,10 @@ public class GraphMaze implements Maze {
         this.edgeCount = 0;
 
         this.adjList = new ArrayList<>();
+
         for (int i = 0; i < nodeCount; i++) {
             adjList.add(new ArrayList<>());
+            nodes.add(new WallNode(i));
         }
     }
 
@@ -35,11 +37,11 @@ public class GraphMaze implements Maze {
         adjList.get(w.ID()).add(v);
 
         if (!nodes.contains(v)) {
-            nodes.add(v);
+            nodes.set(v.ID(), v);
         }
 
         if (!nodes.contains(w)) {
-            nodes.add(w);
+            nodes.set(w.ID(), w);
         }
 
         edgeCount++;
@@ -66,6 +68,29 @@ public class GraphMaze implements Maze {
         return null;
     }
 
+    public MazeNode getNodeFromPosition(Position p) {
+        for (MazeNode node : nodes) {
+            if (node.getPosition() != null) {
+                if (node.getPosition().Equals(p)) {return node;}
+            }
+        }
+        return null;
+    }
+
+    public Integer getIDFromPosition(Position p) {
+        for (MazeNode node : nodes) {
+            if (node.getPosition() != null) {
+                if (node.getPosition().Equals(p)) {return node.ID();}
+            }
+        }
+        return null;
+    }
+
+    public Position getPositionFromID(Integer id) {
+        MazeNode node = this.getNodeFromId(id);
+        return node.getPosition();
+    }
+
     @Override
     public boolean isValidIndex(Integer row, Integer col) {
         return row >= 0 && row < this.height && col >= 0 && col < this.width;
@@ -73,7 +98,7 @@ public class GraphMaze implements Maze {
 
     @Override
     public Cell getCellAt(int row, int col) {
-        Integer nID = (row * this.getWidth()) + col;
+        Integer nID = (row * this.getHeight()) + col;
         if (this.getNodeFromId(nID) == null) {
             return new WallCell();
         } else {
@@ -83,9 +108,9 @@ public class GraphMaze implements Maze {
 
     @Override
     public Cell getCellAt(Position p) {
-        Integer row = p.X();
-        Integer col = p.Y();
-        Integer nID = (row * this.getWidth()) + col;
+        Integer row = p.Y();
+        Integer col = p.X();
+        Integer nID = (row * this.getHeight()) + col;
         if (this.getNodeFromId(nID) == null) {
             return new WallCell();
         } else {
@@ -146,6 +171,41 @@ public class GraphMaze implements Maze {
     @Override
     public Integer getHeight() {
         return this.height;
+    }
+
+    // The heading returned gives the relative direction assuming the first parameter
+    // is the origin. i.e., endNode is [heading output] relative to startNode
+    public static Heading getRelativeHeading(MazeNode startNode, MazeNode endNode) {
+        if (startNode.X() < endNode.X() && startNode.Y().equals(endNode.Y())) {
+            return Heading.EAST;
+        } else if (startNode.X() > endNode.X() && startNode.Y().equals(endNode.Y())) {
+            return Heading.WEST;
+        } else if (startNode.X().equals(endNode.X()) && startNode.Y() < endNode.Y()) {
+            return Heading.SOUTH;
+        } else if (startNode.X().equals(endNode.X()) && startNode.Y() > endNode.Y()) {
+            return Heading.NORTH;
+        } else {
+            // same node or not at 90 degrees to each other
+            return null;
+        }
+    }
+
+    public String mazeString() {
+        StringBuilder sb = new StringBuilder();
+
+        int col = 0;
+        for (MazeNode node : nodes) {
+            sb.append(node.getCell().toString());
+            sb.append(node.getCell().toString());
+            sb.append(" ");
+            col++;
+            if (col == width) {
+                sb.append("\n");
+                col = 0;
+            }
+        }
+
+        return sb.toString();
     }
 
     @Override

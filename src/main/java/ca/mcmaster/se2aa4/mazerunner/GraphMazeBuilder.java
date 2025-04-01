@@ -1,6 +1,7 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,11 +23,10 @@ public class GraphMazeBuilder implements MazeBuilder {
     public Matrix<Cell> parseMazeString(String mazeString) {
         int row = 0, col = 0;
 
-        Matrix<Cell> maze = new ArrayMatrix<Cell>(this.height, this.width);
+        Matrix<Cell> maze = new ArrayMatrix<>(this.height, this.width);
 
         for (String line : mazeString.split("\n")) {
             String[] s = line.split("");
-
             for (int i = 0; i < width; i++) {
                 try {
                     if (Objects.equals(s[i], " ")) {
@@ -45,27 +45,32 @@ public class GraphMazeBuilder implements MazeBuilder {
 
             if (col == width) {
                 col = 0;
-                row++;
             }
+            row++;
         }
+
         return maze;
     }
 
     public List<MazeNode> buildNodes() {
+        Integer id = 0;
         for (int row = 0; row < this.height; row++) {
             for (int col = 0; col < this.width; col++) {
-                Cell cur = this.matrixRepresentation.getRow(row).get(col);
+                Cell cur = this.matrixRepresentation.Get(row, col);
+
                 if (cur instanceof WallCell) {
-                    nodes.add(new WallNode(((row * this.width) + col), col, row));
+                    nodes.add(new WallNode(id));
                 } if (cur instanceof EmptyCell) {
                     if (col == this.width - 1 || col == 0) {
-                        nodes.add(new EmptyNode((row * this.width) + col, col, row, true));
+                        nodes.add(new EmptyNode(id, col, row, true));
                     } else {
-                        nodes.add(new EmptyNode((row * this.width) + col, row, col, false));
+                        nodes.add(new EmptyNode(id, col, row, false));
                     }
                 }
+                id++;
             }
         }
+
         return nodes;
     }
 
@@ -86,34 +91,34 @@ public class GraphMazeBuilder implements MazeBuilder {
             Integer nx = node.X();
             Integer ny = node.Y();
 
-            if (matrixRepresentation.isValidIndex(nx + 1, ny)) {
-                Cell eastNode = matrixRepresentation.Get(nx + 1, ny);
-                int nodeID = ((nx + 1) * this.width) + ny;
-                if (eastNode instanceof EmptyCell) {
-                    adj.add(this.nodes.get(nodeID));
-                }
-            }
-
-            if (matrixRepresentation.isValidIndex(nx - 1, ny)) {
-                Cell westNode = matrixRepresentation.Get(nx - 1, ny);
-                int nodeID = ((nx - 1) * this.width) + ny;
-                if (westNode instanceof EmptyCell) {
-                    adj.add(this.nodes.get(nodeID));
-                }
-            }
-
-            if (matrixRepresentation.isValidIndex(nx, ny + 1)) {
-                Cell southNode = matrixRepresentation.Get(nx, ny + 1);
-                int nodeID = (nx * this.width) + (ny + 1);
+            if ((ny + 1) < this.height) {
+                Cell southNode = matrixRepresentation.Get(ny + 1, nx);
+                int nodeID = node.ID() + this.width;
                 if (southNode instanceof EmptyCell) {
                     adj.add(this.nodes.get(nodeID));
                 }
             }
 
-            if (matrixRepresentation.isValidIndex(nx, ny - 1)) {
-                Cell northNode = matrixRepresentation.Get(nx, ny-1);
-                int nodeID = (nx * this.width) + (ny - 1);
+            if ((ny - 1) >= 0) {
+                Cell northNode = matrixRepresentation.Get(ny - 1, nx);
+                int nodeID = node.ID() - this.width;
                 if (northNode instanceof EmptyCell) {
+                    adj.add(this.nodes.get(nodeID));
+                }
+            }
+
+            if ((nx + 1) < this.width) {
+                Cell eastNode = matrixRepresentation.Get(ny, nx + 1);
+                int nodeID = node.ID() + 1;
+                if (eastNode instanceof EmptyCell) {
+                    adj.add(this.nodes.get(nodeID));
+                }
+            }
+
+            if ((nx - 1) >= 0) {
+                Cell westNode = matrixRepresentation.Get(ny, nx-1);
+                int nodeID = node.ID() - 1;
+                if (westNode instanceof EmptyCell) {
                     adj.add(this.nodes.get(nodeID));
                 }
             }
