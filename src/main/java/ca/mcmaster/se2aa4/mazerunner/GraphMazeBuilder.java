@@ -60,7 +60,7 @@ public class GraphMazeBuilder implements MazeBuilder {
 
                 if (cur instanceof WallCell) {
                     nodes.add(new WallNode(id));
-                } if (cur instanceof EmptyCell) {
+                } else if (cur instanceof EmptyCell) {
                     if (col == this.width - 1 || col == 0) {
                         nodes.add(new EmptyNode(id, col, row, true));
                     } else {

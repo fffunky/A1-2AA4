@@ -91,7 +91,7 @@ public class Main {
             logger.info("**** Computing path\n");
             Path path = cc.runPathfinder();
 
-            System.out.printf("Canonical: %s\n", path.Canonical());
+            System.out.printf("\nCanonical: %s\n\n", path.Canonical());
             System.out.printf("Factorized: %s\n\n", path.Factorized());
         } else {
             // check path given a -p flag
@@ -106,9 +106,9 @@ public class Main {
             logger.info("**** Following path: {}\n", pathString);
 
             if ( cc.isValidSolution(p) ) {
-                System.out.printf("Path '%s' is a valid solution to the maze\n\n", pathString);
+                System.out.printf("\nPath '%s' is a valid solution to the maze\n\n", pathString);
             } else {
-                System.out.printf("Path '%s' is not a valid solution to the maze\n\n", pathString);
+                System.out.printf("\nPath '%s' is not a valid solution to the maze\n\n", pathString);
             }
 
         }
