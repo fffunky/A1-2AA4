@@ -83,7 +83,8 @@ public class Main {
         initCLI(args);
         String fileInput = readFile(filePath);
         MazeBuilder mb = new GraphMazeBuilder(fileInput);
-        GraphMaze maze = (GraphMaze) mb.buildMaze();
+        Director director = new Director();
+        GraphMaze maze = (GraphMaze) director.buildMaze(mb);
         GraphControlCentre cc = new GraphControlCentre(maze);
 
         if (pathString == null) {
